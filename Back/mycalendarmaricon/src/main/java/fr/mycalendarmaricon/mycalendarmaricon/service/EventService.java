@@ -32,5 +32,26 @@ public class EventService {
 			throw new EventNotFoundException("L'evenement qui a pour identifiant" + id + " n'existe pas en bdd");
 		}
 	}
+
+	public boolean deleteById(Long id) {
+		// TODO Auto-generated method stub
+		
+		// CHERCHER EN BDD
+		try {
+			Event event = getEventById(id);
+			eventRepository.delete(event);
+			return true;
+		} catch (EventNotFoundException e) {
+			return false;
+		}
+		
+		
+		// 1 TU LE TROUVES => TU SUPPRIMES => RETURN TRUE
+		
+		// 2 PAS TROUVE => TU FAIS RIEN => RETURN FALSE
+		
+		
+		
+	}
 	
 }
