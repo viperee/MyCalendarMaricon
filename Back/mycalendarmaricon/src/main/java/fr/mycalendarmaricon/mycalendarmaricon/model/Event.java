@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Evenement {
+public class Event {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -15,12 +15,12 @@ public class Evenement {
 	private String dateFin;
 	private String couleur;
 
-	public Evenement() {
+	public Event() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Evenement(Long id, String titre, String dateDebut, String dateFin, String couleur) {
+	public Event(Long id, String titre, String dateDebut, String dateFin, String couleur) {
 		super();
 		this.id = id;
 		this.titre = titre;

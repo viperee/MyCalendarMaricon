@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import fr.mycalendarmaricon.mycalendarmaricon.model.Evenement;
+import fr.mycalendarmaricon.mycalendarmaricon.model.Event;
 @Repository
-public interface EvenementRepository extends CrudRepository<Evenement, Long> {
-	public List<Evenement> findAll();
+public interface EventRepository extends CrudRepository<Event, Long> {
+	public List<Event> findAll();
 }
