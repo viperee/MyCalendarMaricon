@@ -1,6 +1,15 @@
 package fr.mycalendarmaricon.mycalendarmaricon.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Evenement {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 	private String titre;
 	private String dateDebut;
 	private String dateFin;
@@ -11,12 +20,21 @@ public class Evenement {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Evenement(String titre, String dateDebut, String dateFin, String couleur) {
+	public Evenement(Long id, String titre, String dateDebut, String dateFin, String couleur) {
 		super();
+		this.id = id;
 		this.titre = titre;
 		this.dateDebut = dateDebut;
 		this.dateFin = dateFin;
 		this.couleur = couleur;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getTitre() {
