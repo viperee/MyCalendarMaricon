@@ -4,14 +4,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
+
+import org.springframework.beans.factory.annotation.Required;
 
 @Entity
 public class Event {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	@NotEmpty
 	private String titre;
+	@NotEmpty
 	private String dateDebut;
+	@NotEmpty
 	private String dateFin;
 	private String couleur;
 
