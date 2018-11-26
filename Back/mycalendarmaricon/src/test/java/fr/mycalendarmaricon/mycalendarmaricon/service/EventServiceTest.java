@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.any;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assert;
 import org.junit.Test;
@@ -12,8 +13,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import fr.mycalendarmaricon.mycalendarmaricon.exception.EventNotFoundException;
 import fr.mycalendarmaricon.mycalendarmaricon.model.Event;
 import fr.mycalendarmaricon.mycalendarmaricon.repository.EventRepository;
 
@@ -28,6 +31,7 @@ public class EventServiceTest {
 	
 	// 
 	@InjectMocks
+	@Spy
 	private EventService eventService;
 
 	@Test
@@ -40,6 +44,8 @@ public class EventServiceTest {
 		
 		// THEN (Assertions)
 		assertThat(allEvents).isNotNull();
+		
+		Mockito.verify(eventRepository).findAll();
 	
 	}
 
@@ -57,16 +63,75 @@ public class EventServiceTest {
 		// THEN
 		assertThat(event).isNotNull();
 		assertThat(event.getId()).isEqualTo(evtSaved.getId());
+		
+		Mockito.verify(eventRepository).save(Mockito.any(Event.class));
 	}
 
 	@Test
 	public void testGetEventById() throws Exception {
-		throw new RuntimeException("not yet implemented");
+		// WHEN 
+		Long id = new Long(1);
+		Event event = new Event();
+		event.setId(id);
+		Mockito.when(eventRepository.findById(Mockito.eq(id))).thenReturn(Optional.of(event));
+		
+		// GIVEN
+		Event eventById = eventService.getEventById(id);
+		
+		//THEN
+		assertThat(eventById.getId()).isEqualTo(event.getId());
+		Mockito.verify(eventRepository).findById(Mockito.eq(id));
+	}
+	
+	@Test(expected=EventNotFoundException.class)
+	public void testGetEventByIdEmpty() throws Exception {
+		// WHEN
+		Long id = new Long(1);
+		Mockito.when(eventRepository.findById(Mockito.eq(id))).thenReturn(Optional.empty());
+		
+		
+		// GIVEN
+		Event eventById = eventService.getEventById(id);
+		
+		// THEN
+		Mockito.verify(eventRepository).findById(Mockito.eq(id));
+		
 	}
 
 	@Test
-	public void testDeleteById() throws Exception {
-		throw new RuntimeException("not yet implemented");
+	public void testDeleteByIdIsDeleted() throws Exception {
+		// WHEN
+		Long id = new Long(1);
+		Event event = new Event();
+		event.setId(id);
+		Mockito.doReturn(event).when(eventService).getEventById(Mockito.eq(id));
+		Mockito.doNothing().when(eventRepository).delete(Mockito.eq(event));
+		
+		// GIVEN
+		boolean deleteById = eventService.deleteById(id);
+		
+		// THEN
+		assertThat(deleteById).isTrue();
+		Mockito.verify(eventService).getEventById(Mockito.eq(id));
+		Mockito.verify(eventRepository).delete(Mockito.eq(event));
+		
+		
+	}
+	
+	@Test
+	public void testDeleteByIdIsNotDeleted() throws Exception {
+		// WHEN
+		Long id = new Long(1);
+		Event event = new Event();
+		event.setId(id);
+		Mockito.doThrow(EventNotFoundException.class).when(eventService).getEventById(Mockito.eq(id));
+
+		// GIVEN
+		boolean deleteById = eventService.deleteById(id);
+		
+		// THEN
+		assertThat(deleteById).isFalse();
+		Mockito.verify(eventService).getEventById(Mockito.eq(id));
 	}
 
 }
