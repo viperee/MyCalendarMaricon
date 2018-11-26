@@ -53,4 +53,9 @@ public class EventController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);			
 		}
 	}
+	
+	// Mettre à jour un evenement par id
+	
+	// Supprimer tous les events de la base
+	
 }
