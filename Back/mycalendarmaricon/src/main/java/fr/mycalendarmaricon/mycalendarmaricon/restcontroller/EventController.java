@@ -21,20 +21,23 @@ public class EventController {
 	@Autowired
 	private EventService eventService;
 	
-	@GetMapping("/events")
+	public static final String URL_EVENTS = "/events";
+	public static final String URL_EVENTS_WITH_ID = URL_EVENTS + "/{id}";
+	
+	@GetMapping(URL_EVENTS)
 	public ResponseEntity<List<Event>> getAllEvents(){
 		List<Event> res = eventService.getAllEvents();
 		
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 	
-	@PutMapping("/events")
+	@PutMapping(URL_EVENTS)
 	public ResponseEntity<Event> createEvent(@RequestBody Event evt){
 		Event eventSaved = eventService.createEvt(evt);
-		return new ResponseEntity<>(eventSaved, HttpStatus.OK);
+		return new ResponseEntity<>(eventSaved, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/events/{id}")
+	@GetMapping(URL_EVENTS_WITH_ID)
 	public ResponseEntity<Event> getEventById(@PathVariable(name = "id") Long id){
 		try {
 			Event event = eventService.getEventById(id);
@@ -44,7 +47,7 @@ public class EventController {
 		}
 	}
 	
-	@DeleteMapping("/events/{id}")
+	@DeleteMapping(URL_EVENTS_WITH_ID)
 	public ResponseEntity<Event> deleteEventById(@PathVariable(name = "id") Long id){
 		boolean isDeleted = eventService.deleteById(id);
 		if(isDeleted) {
