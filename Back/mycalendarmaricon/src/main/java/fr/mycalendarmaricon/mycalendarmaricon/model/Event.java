@@ -34,6 +34,14 @@ public class Event {
 		this.dateFin = dateFin;
 		this.couleur = couleur;
 	}
+	
+	public Event(String titre, String dateDebut, String dateFin, String couleur) {
+		super();
+		this.titre = titre;
+		this.dateDebut = dateDebut;
+		this.dateFin = dateFin;
+		this.couleur = couleur;
+	}
 
 	public Long getId() {
 		return id;

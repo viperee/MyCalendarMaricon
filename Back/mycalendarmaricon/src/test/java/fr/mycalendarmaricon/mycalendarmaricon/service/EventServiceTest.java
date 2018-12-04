@@ -1,13 +1,11 @@
 package fr.mycalendarmaricon.mycalendarmaricon.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.any;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.assertj.core.api.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -50,22 +48,22 @@ public class EventServiceTest {
 	}
 
 	@Test
-	public void testCreateEvt() throws Exception {
-		// WHEN
-		Event evt = new Event();
-		Event evtSaved = new Event();
-		evtSaved.setId(1L);
-		Mockito.when(eventRepository.save(Mockito.any(Event.class))).thenReturn(evtSaved);
-		
-		// GIVEN
-		Event event = eventService.createEvt(evt);
-		
-		// THEN
-		assertThat(event).isNotNull();
-		assertThat(event.getId()).isEqualTo(evtSaved.getId());
-		
-		Mockito.verify(eventRepository).save(Mockito.any(Event.class));
-	}
+		public void testSaveEvt() throws Exception {
+			// WHEN
+			Event evt = new Event();
+			Event evtSaved = new Event();
+			evtSaved.setId(1L);
+			Mockito.when(eventRepository.save(Mockito.any(Event.class))).thenReturn(evtSaved);
+			
+			// GIVEN
+			Event event = eventService.saveEvt(evt);
+			
+			// THEN
+			assertThat(event).isNotNull();
+			assertThat(event.getId()).isEqualTo(evtSaved.getId());
+			
+			Mockito.verify(eventRepository).save(Mockito.any(Event.class));
+		}
 
 	@Test
 	public void testGetEventById() throws Exception {
@@ -132,6 +130,30 @@ public class EventServiceTest {
 		// THEN
 		assertThat(deleteById).isFalse();
 		Mockito.verify(eventService).getEventById(Mockito.eq(id));
+	}
+
+	@Test
+	public void testUpdateEvent() throws Exception {
+		// WHEN
+		Event eventWithData = new Event("yo", "Vend. 13", "Vend. 16", "rose");
+		Event eventFromDB = new Event("id", "Sam. 14", "Sam. 17", "vert");
+		Long id = new Long(1);
+		eventFromDB.setId(id);
+		Event eventSaved = new Event(id, "yo", "Vend. 13", "Vend. 16", "rose");
+		Mockito.doReturn(eventFromDB).when(eventService).getEventById(Mockito.eq(id));
+		Mockito.doReturn(eventSaved).when(eventService).saveEvt(Mockito.any(Event.class));
+		
+		// GIVEN
+		Event updatedEvent = eventService.updateEvent(eventWithData, id);
+		
+		// THEN
+		assertThat(updatedEvent.getTitre()).isEqualTo(eventWithData.getTitre());
+		assertThat(updatedEvent.getDateDebut()).isEqualTo(eventWithData.getDateDebut());
+		assertThat(updatedEvent.getDateFin()).isEqualTo(eventWithData.getDateFin());
+		assertThat(updatedEvent.getCouleur()).isEqualTo(eventWithData.getCouleur());
+		Mockito.verify(eventService).getEventById(Mockito.eq(id));
+		Mockito.verify(eventService).saveEvt(Mockito.any(Event.class));
+		
 	}
 
 }

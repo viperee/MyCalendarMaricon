@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +34,7 @@ public class EventController {
 	
 	@PutMapping(URL_EVENTS)
 	public ResponseEntity<Event> createEvent(@RequestBody Event evt){
-		Event eventSaved = eventService.createEvt(evt);
+		Event eventSaved = eventService.saveEvt(evt);
 		return new ResponseEntity<>(eventSaved, HttpStatus.CREATED);
 	}
 	
@@ -58,7 +59,20 @@ public class EventController {
 	}
 	
 	// Mettre à jour un evenement par id
-	
-	// Supprimer tous les events de la base
+	@PostMapping(URL_EVENTS_WITH_ID)
+	public ResponseEntity<Event> updateEventsById(@PathVariable(name = "id") Long id,@RequestBody Event event){
+		//identifiant correct?
+		//recup objet qu'on veut mettre à jour en bdd
+		//regarder pour chaque champ si c pareil ou pas
+		try {
+			Event eventSaved = eventService.updateEvent(event,id);
+			return new ResponseEntity<>(eventSaved, HttpStatus.OK);
+		} catch (EventNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+	}
 	
 }

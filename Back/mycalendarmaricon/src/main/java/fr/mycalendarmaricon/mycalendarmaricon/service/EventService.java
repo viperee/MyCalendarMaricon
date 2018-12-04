@@ -19,7 +19,7 @@ public class EventService {
 		return eventRepository.findAll();
 	}
 	
-	public Event createEvt(Event evt) {
+	public Event saveEvt(Event evt) {
 		return eventRepository.save(evt);
 	}
 
@@ -52,6 +52,25 @@ public class EventService {
 		
 		
 		
+	}
+
+	public Event updateEvent(Event event, Long id) throws EventNotFoundException {
+		// TODO Auto-generated method stub
+		Event eventSaved = getEventById(id);
+		if(!eventSaved.getTitre().equals(event.getTitre())) {
+			eventSaved.setTitre(event.getTitre());
+		}
+		if(!eventSaved.getDateDebut().equals(event.getDateDebut())) {
+			eventSaved.setDateDebut(event.getDateDebut());
+		}
+		if(!eventSaved.getDateFin().equals(event.getDateFin())) {
+			eventSaved.setDateFin(event.getDateFin());
+		}
+		if(!eventSaved.getCouleur().equals(event.getCouleur())) {
+			eventSaved.setCouleur(event.getCouleur());
+		}
+		Event updatedEvent = saveEvt(eventSaved);
+		return updatedEvent;
 	}
 	
 }

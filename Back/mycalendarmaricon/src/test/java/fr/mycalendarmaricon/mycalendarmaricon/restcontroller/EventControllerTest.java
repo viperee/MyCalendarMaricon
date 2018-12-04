@@ -1,14 +1,10 @@
 package fr.mycalendarmaricon.mycalendarmaricon.restcontroller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -62,7 +58,7 @@ public class EventControllerTest {
 		// WHEN
 		Event evt = new Event();
 		Event eventSaved = new Event();
-		Mockito.when(eventService.createEvt(Mockito.eq(evt))).thenReturn(eventSaved);
+		Mockito.when(eventService.saveEvt(Mockito.eq(evt))).thenReturn(eventSaved);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String eventJson = objectMapper.writeValueAsString(evt);
@@ -74,7 +70,7 @@ public class EventControllerTest {
 		result.andExpect(MockMvcResultMatchers.status().isCreated());
 		result.andDo(MockMvcResultHandlers.print());
 		
-		Mockito.verify(eventService).createEvt(Mockito.eq(evt));
+		Mockito.verify(eventService).saveEvt(Mockito.eq(evt));
 	}
 
 	@Test
@@ -142,6 +138,60 @@ public class EventControllerTest {
 		result.andDo(MockMvcResultHandlers.print());
 		
 		Mockito.verify(eventService).deleteById(Mockito.eq(id));
+	}
+
+	@Test
+	public void testUpdateEventsById() throws Exception {
+		// WHEN
+		String titre = "test";
+		String dateDebut = "4 dec";
+		String dateFin = "5 dec";
+		String couleur = "rouge";
+		Event eventWithData = new Event(titre, dateDebut, dateFin, couleur);
+		Long id = new Long(1);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String eventJson = objectMapper.writeValueAsString(eventWithData);
+		
+		Event eventUpdated = new Event(id,titre, dateDebut, dateFin, couleur);
+		Mockito.when(eventService.updateEvent(Mockito.any(Event.class), Mockito.eq(id))).thenReturn(eventUpdated);
+		
+		// GIVEN
+		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post(EventController.URL_EVENTS_WITH_ID, id).content(eventJson).contentType(MediaType.APPLICATION_JSON_UTF8));
+		
+		
+		// THEN
+		result.andExpect(MockMvcResultMatchers.status().isOk());
+		result.andDo(MockMvcResultHandlers.print());
+		
+		Mockito.verify(eventService).updateEvent(Mockito.any(Event.class), Mockito.eq(id));
+	}
+	
+	@Test
+	public void testUpdateEventsByIdEventNotFoundException() throws Exception {
+		// WHEN
+		String titre = "test";
+		String dateDebut = "4 dec";
+		String dateFin = "5 dec";
+		String couleur = "rouge";
+		Event eventWithData = new Event(titre, dateDebut, dateFin, couleur);
+		Long id = new Long(1);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String eventJson = objectMapper.writeValueAsString(eventWithData);
+		
+		Mockito.when(eventService.updateEvent(Mockito.any(Event.class), Mockito.eq(id))).thenThrow(EventNotFoundException.class);
+
+		
+		// GIVEN
+		ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post(EventController.URL_EVENTS_WITH_ID, id).content(eventJson).contentType(MediaType.APPLICATION_JSON_UTF8));
+		
+		
+		// THEN
+		result.andExpect(MockMvcResultMatchers.status().isNotFound());
+		result.andDo(MockMvcResultHandlers.print());
+		
+		Mockito.verify(eventService).updateEvent(Mockito.any(Event.class), Mockito.eq(id));
 	}
 
 }
