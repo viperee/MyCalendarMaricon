@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Required;
@@ -19,28 +20,29 @@ public class Event {
 	private String dateDebut;
 	@NotEmpty
 	private String dateFin;
-	private String couleur;
+	@OneToOne
+	private Colors couleurs;
 
 	public Event() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Event(Long id, String titre, String dateDebut, String dateFin, String couleur) {
+	public Event(Long id, String titre, String dateDebut, String dateFin, Colors couleurs) {
 		super();
 		this.id = id;
 		this.titre = titre;
 		this.dateDebut = dateDebut;
 		this.dateFin = dateFin;
-		this.couleur = couleur;
+		this.couleurs = couleurs;
 	}
 	
-	public Event(String titre, String dateDebut, String dateFin, String couleur) {
+	public Event(String titre, String dateDebut, String dateFin, Colors couleurs) {
 		super();
 		this.titre = titre;
 		this.dateDebut = dateDebut;
 		this.dateFin = dateFin;
-		this.couleur = couleur;
+		this.couleurs = couleurs;
 	}
 
 	public Long getId() {
@@ -75,12 +77,13 @@ public class Event {
 		this.dateFin = dateFin;
 	}
 
-	public String getCouleur() {
-		return couleur;
+
+	public Colors getCouleurs() {
+		return couleurs;
 	}
 
-	public void setCouleur(String couleur) {
-		this.couleur = couleur;
+	public void setCouleurs(Colors couleurs) {
+		this.couleurs = couleurs;
 	}
 
 	@Override

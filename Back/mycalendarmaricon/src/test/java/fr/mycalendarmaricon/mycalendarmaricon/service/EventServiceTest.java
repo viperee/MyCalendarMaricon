@@ -15,6 +15,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import fr.mycalendarmaricon.mycalendarmaricon.exception.EventNotFoundException;
+import fr.mycalendarmaricon.mycalendarmaricon.model.Colors;
 import fr.mycalendarmaricon.mycalendarmaricon.model.Event;
 import fr.mycalendarmaricon.mycalendarmaricon.repository.EventRepository;
 
@@ -135,11 +136,13 @@ public class EventServiceTest {
 	@Test
 	public void testUpdateEvent() throws Exception {
 		// WHEN
-		Event eventWithData = new Event("yo", "Vend. 13", "Vend. 16", "rose");
-		Event eventFromDB = new Event("id", "Sam. 14", "Sam. 17", "vert");
+		Colors couleursRouge = new Colors("#ad2121", "#FAE3E3");
+		Colors couleursBleu = new Colors("#1e90ff", "#D1E8FF");
+		Event eventWithData = new Event("yo", "Vend. 13", "Vend. 16", couleursRouge);
+		Event eventFromDB = new Event("id", "Sam. 14", "Sam. 17", couleursBleu);
 		Long id = new Long(1);
 		eventFromDB.setId(id);
-		Event eventSaved = new Event(id, "yo", "Vend. 13", "Vend. 16", "rose");
+		Event eventSaved = new Event(id, "yo", "Vend. 13", "Vend. 16", couleursRouge);
 		Mockito.doReturn(eventFromDB).when(eventService).getEventById(Mockito.eq(id));
 		Mockito.doReturn(eventSaved).when(eventService).saveEvt(Mockito.any(Event.class));
 		
@@ -150,7 +153,8 @@ public class EventServiceTest {
 		assertThat(updatedEvent.getTitre()).isEqualTo(eventWithData.getTitre());
 		assertThat(updatedEvent.getDateDebut()).isEqualTo(eventWithData.getDateDebut());
 		assertThat(updatedEvent.getDateFin()).isEqualTo(eventWithData.getDateFin());
-		assertThat(updatedEvent.getCouleur()).isEqualTo(eventWithData.getCouleur());
+		assertThat(updatedEvent.getCouleurs().getPrimary()).isEqualTo(eventWithData.getCouleurs().getPrimary());
+		assertThat(updatedEvent.getCouleurs().getSecondary()).isEqualTo(eventWithData.getCouleurs().getSecondary());
 		Mockito.verify(eventService).getEventById(Mockito.eq(id));
 		Mockito.verify(eventService).saveEvt(Mockito.any(Event.class));
 		

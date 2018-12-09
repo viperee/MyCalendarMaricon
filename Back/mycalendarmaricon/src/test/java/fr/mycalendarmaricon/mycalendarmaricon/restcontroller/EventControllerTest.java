@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.mycalendarmaricon.mycalendarmaricon.exception.EventNotFoundException;
+import fr.mycalendarmaricon.mycalendarmaricon.model.Colors;
 import fr.mycalendarmaricon.mycalendarmaricon.model.Event;
 import fr.mycalendarmaricon.mycalendarmaricon.service.EventService;
 
@@ -146,14 +147,14 @@ public class EventControllerTest {
 		String titre = "test";
 		String dateDebut = "4 dec";
 		String dateFin = "5 dec";
-		String couleur = "rouge";
-		Event eventWithData = new Event(titre, dateDebut, dateFin, couleur);
+		Colors couleursRouge = new Colors("#ad2121", "#FAE3E3");
+		Event eventWithData = new Event(titre, dateDebut, dateFin, couleursRouge);
 		Long id = new Long(1);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String eventJson = objectMapper.writeValueAsString(eventWithData);
 		
-		Event eventUpdated = new Event(id,titre, dateDebut, dateFin, couleur);
+		Event eventUpdated = new Event(id,titre, dateDebut, dateFin, couleursRouge);
 		Mockito.when(eventService.updateEvent(Mockito.any(Event.class), Mockito.eq(id))).thenReturn(eventUpdated);
 		
 		// GIVEN
@@ -173,8 +174,8 @@ public class EventControllerTest {
 		String titre = "test";
 		String dateDebut = "4 dec";
 		String dateFin = "5 dec";
-		String couleur = "rouge";
-		Event eventWithData = new Event(titre, dateDebut, dateFin, couleur);
+		Colors couleursRouge = new Colors("#ad2121", "#FAE3E3");
+		Event eventWithData = new Event(titre, dateDebut, dateFin, couleursRouge);
 		Long id = new Long(1);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
