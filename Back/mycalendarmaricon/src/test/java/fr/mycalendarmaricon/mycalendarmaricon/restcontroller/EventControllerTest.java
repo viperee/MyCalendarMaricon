@@ -148,13 +148,14 @@ public class EventControllerTest {
 		String dateDebut = "4 dec";
 		String dateFin = "5 dec";
 		Colors couleursRouge = new Colors("#ad2121", "#FAE3E3");
-		Event eventWithData = new Event(titre, dateDebut, dateFin, couleursRouge);
+		boolean journeeEntiere = true;
+		Event eventWithData = new Event(titre, dateDebut, dateFin, couleursRouge, journeeEntiere);
 		Long id = new Long(1);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String eventJson = objectMapper.writeValueAsString(eventWithData);
 		
-		Event eventUpdated = new Event(id,titre, dateDebut, dateFin, couleursRouge);
+		Event eventUpdated = new Event(id,titre, dateDebut, dateFin, couleursRouge, journeeEntiere);
 		Mockito.when(eventService.updateEvent(Mockito.any(Event.class), Mockito.eq(id))).thenReturn(eventUpdated);
 		
 		// GIVEN
@@ -175,7 +176,7 @@ public class EventControllerTest {
 		String dateDebut = "4 dec";
 		String dateFin = "5 dec";
 		Colors couleursRouge = new Colors("#ad2121", "#FAE3E3");
-		Event eventWithData = new Event(titre, dateDebut, dateFin, couleursRouge);
+		Event eventWithData = new Event(titre, dateDebut, dateFin, couleursRouge, true);
 		Long id = new Long(1);
 		
 		ObjectMapper objectMapper = new ObjectMapper();

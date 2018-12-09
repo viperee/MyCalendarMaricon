@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
 
-import org.springframework.beans.factory.annotation.Required;
-
 @Entity
 public class Event {
 	@Id
@@ -22,27 +20,30 @@ public class Event {
 	private String dateFin;
 	@OneToOne
 	private Colors couleurs;
+	private boolean journeeEntiere;
 
 	public Event() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public Event(Long id, String titre, String dateDebut, String dateFin, Colors couleurs) {
+	public Event(Long id, String titre, String dateDebut, String dateFin, Colors couleurs, boolean journeeEntiere) {
 		super();
 		this.id = id;
 		this.titre = titre;
 		this.dateDebut = dateDebut;
 		this.dateFin = dateFin;
 		this.couleurs = couleurs;
+		this.journeeEntiere = journeeEntiere;
 	}
-	
-	public Event(String titre, String dateDebut, String dateFin, Colors couleurs) {
+
+	public Event(String titre, String dateDebut, String dateFin, Colors couleurs, boolean journeeEntiere) {
 		super();
 		this.titre = titre;
 		this.dateDebut = dateDebut;
 		this.dateFin = dateFin;
 		this.couleurs = couleurs;
+		this.journeeEntiere = journeeEntiere;
+
 	}
 
 	public Long getId() {
@@ -77,13 +78,20 @@ public class Event {
 		this.dateFin = dateFin;
 	}
 
-
 	public Colors getCouleurs() {
 		return couleurs;
 	}
 
 	public void setCouleurs(Colors couleurs) {
 		this.couleurs = couleurs;
+	}
+
+	public boolean isJourneeEntiere() {
+		return journeeEntiere;
+	}
+
+	public void setJourneeEntiere(boolean journeeEntiere) {
+		this.journeeEntiere = journeeEntiere;
 	}
 
 	@Override
@@ -110,6 +118,5 @@ public class Event {
 			return false;
 		return true;
 	}
-	
-	
+
 }

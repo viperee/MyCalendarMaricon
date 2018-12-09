@@ -138,11 +138,13 @@ public class EventServiceTest {
 		// WHEN
 		Colors couleursRouge = new Colors("#ad2121", "#FAE3E3");
 		Colors couleursBleu = new Colors("#1e90ff", "#D1E8FF");
-		Event eventWithData = new Event("yo", "Vend. 13", "Vend. 16", couleursRouge);
-		Event eventFromDB = new Event("id", "Sam. 14", "Sam. 17", couleursBleu);
+		boolean journeeEntiere = true;
+		boolean journeeEntiere2 = false;
+		Event eventWithData = new Event("yo", "Vend. 13", "Vend. 16", couleursRouge,journeeEntiere);
+		Event eventFromDB = new Event("id", "Sam. 14", "Sam. 17", couleursBleu, journeeEntiere2);
 		Long id = new Long(1);
 		eventFromDB.setId(id);
-		Event eventSaved = new Event(id, "yo", "Vend. 13", "Vend. 16", couleursRouge);
+		Event eventSaved = new Event(id, "yo", "Vend. 13", "Vend. 16", couleursRouge, journeeEntiere);
 		Mockito.doReturn(eventFromDB).when(eventService).getEventById(Mockito.eq(id));
 		Mockito.doReturn(eventSaved).when(eventService).saveEvt(Mockito.any(Event.class));
 		
