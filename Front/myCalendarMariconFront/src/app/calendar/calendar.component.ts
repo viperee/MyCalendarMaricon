@@ -165,4 +165,13 @@ export class CalendarComponent implements OnInit{
       this.events.splice(index, 1);
     });
   }
+
+  updateEvent(event: CalendarEvent){
+    console.log(event);
+    const eventToUpdate: Event = this.mappingEventService.convertCalendarEventToEvent(event);
+    this.eventService.updateEvent(eventToUpdate).subscribe((eventUpdated) => {
+      event = this.mappingEventService.convertEventToCalendarEvent(eventUpdated);
+    })
+    alert("update");
+  }
 }
