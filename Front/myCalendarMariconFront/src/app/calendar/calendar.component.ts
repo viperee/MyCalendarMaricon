@@ -3,7 +3,6 @@ import { Event } from "./../models/event";
 import { EventService } from "./../services/event.service";
 import {
   Component,
-  ChangeDetectionStrategy,
   ViewChild,
   TemplateRef,
   OnInit
@@ -19,7 +18,6 @@ import {
   addHours
 } from "date-fns";
 import { Subject } from "rxjs";
-import { timer } from "rxjs";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import {
   CalendarEvent,
@@ -27,8 +25,7 @@ import {
   CalendarEventTimesChangedEvent,
   CalendarView
 } from "angular-calendar";
-import { Couleur } from "../models/couleur";
-import { log } from 'util';
+
 
 const colors: any = {
   red: {
@@ -60,11 +57,6 @@ export class CalendarComponent implements OnInit{
 
   viewDate: Date = new Date();
 
-  modalData: {
-    action: string;
-    event: CalendarEvent;
-  };
-
   actions: CalendarEventAction[] = [];
 
   refresh: Subject<any> = new Subject();
@@ -91,18 +83,17 @@ export class CalendarComponent implements OnInit{
               {
                 label: '<i class="fas fa-pencil-alt"></i>',
                 onClick: ({ event }: { event: CalendarEvent }): void => {
-                  console.log(event);
-                  this.handleEvent("Edited", event);
+                  alert("Edited");
                 }
               },
               {
                 label: '<i class="fas fa-times"></i>',
                 onClick: ({ event }: { event: CalendarEvent }): void => {
-                  console.log(events);
-                  events = events.filter(iEvent => iEvent !== event);
-                  this.eventService.deleteEventById(Number(event.id)).subscribe((eventDeletedInDb) =>{
-                  });
-                  this.handleEvent("Deleted", event);
+                  //const eventToRemove: Event = this.mappingEventService.convertEventToCalendarEvent(event);
+                  //events = events.filter(iEvent => iEvent !== eventToRemove);
+                  //eventService.deleteEventById(Number(event.id)).subscribe((eventDeletedInDb) =>{
+                  //});
+                  alert("Deleted");
                 }
               }
             ],
@@ -144,13 +135,8 @@ export class CalendarComponent implements OnInit{
     this.eventService.updateEvent(eventToUpdate).subscribe((eventUpdated) => {
       event = this.mappingEventService.convertEventToCalendarEvent(eventUpdated);
     })
-    this.handleEvent("Dropped or resized TTTT", event);
+    alert("Dropped or resized");
     this.refresh.next();
-  }
-
-  handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: "lg" });
   }
 
   addEvent(): void {

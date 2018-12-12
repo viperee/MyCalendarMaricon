@@ -1,9 +1,7 @@
-import {map} from 'rxjs/internal/operators';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Event } from '../models/event';
-import { CalendarEvent } from 'calendar-utils';
 
 const endpoint = 'http://localhost:8080/events';
 

@@ -1,7 +1,6 @@
 import { Event } from "./../models/event";
 import { Couleur } from "./../models/couleur";
 import { Injectable } from "@angular/core";
-import { Event } from "../models/event";
 import { CalendarEvent } from "calendar-utils";
 
 @Injectable({
