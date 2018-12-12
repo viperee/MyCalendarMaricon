@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlatpickrModule } from 'angularx-flatpickr';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { FlatpickrModule } from 'angularx-flatpickr';
     BrowserModule,
     CommonModule,
     FormsModule,
+    HttpClientModule,
     NgbModalModule,
     FlatpickrModule.forRoot(),
     BrowserAnimationsModule,

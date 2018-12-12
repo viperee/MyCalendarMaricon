@@ -1,5 +1,6 @@
 package fr.mycalendarmaricon.mycalendarmaricon.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +19,7 @@ public class Event {
 	private String dateDebut;
 	@NotEmpty
 	private String dateFin;
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	private Colors couleurs;
 	private boolean journeeEntiere;
 

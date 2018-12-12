@@ -1,10 +1,13 @@
-
+import { MappingEventService } from './../services/mapping-event.service';
+import { Event } from "./../models/event";
+import { EventService } from "./../services/event.service";
 import {
   Component,
   ChangeDetectionStrategy,
   ViewChild,
-  TemplateRef
-} from '@angular/core';
+  TemplateRef,
+  OnInit
+} from "@angular/core";
 import {
   startOfDay,
   endOfDay,
@@ -14,39 +17,40 @@ import {
   isSameDay,
   isSameMonth,
   addHours
-} from 'date-fns';
-import { Subject } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+} from "date-fns";
+import { Subject } from "rxjs";
+import { timer } from "rxjs";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import {
   CalendarEvent,
   CalendarEventAction,
   CalendarEventTimesChangedEvent,
   CalendarView
-} from 'angular-calendar';
+} from "angular-calendar";
+import { Couleur } from "../models/couleur";
 
 const colors: any = {
   red: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3'
+    primary: "#ad2121",
+    secondary: "#FAE3E3"
   },
   blue: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF'
+    primary: "#1e90ff",
+    secondary: "#D1E8FF"
   },
   yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA'
+    primary: "#e3bc08",
+    secondary: "#FDF1BA"
   }
 };
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-calendar',
-  templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.css']
+  selector: "app-calendar",
+  templateUrl: "./calendar.component.html",
+  styleUrls: ["./calendar.component.css"]
 })
-export class CalendarComponent {
-  @ViewChild('modalContent')
+export class CalendarComponent implements OnInit{
+  @ViewChild("modalContent")
   modalContent: TemplateRef<any>;
 
   view: CalendarView = CalendarView.Month;
@@ -60,68 +64,59 @@ export class CalendarComponent {
     event: CalendarEvent;
   };
 
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fas fa-pencil-alt"></i>',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
-      }
-    },
-    {
-      label: '<i class="fas fa-times"></i>',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter(iEvent => iEvent !== event);
-        this.handleEvent('Deleted', event);
-      }
-    }
-  ];
+  actions: CalendarEventAction[] = [];
 
   refresh: Subject<any> = new Subject();
 
-  events: CalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: colors.red,
-      actions: this.actions,
-      allDay: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-      color: colors.yellow,
-      actions: this.actions
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      end: addDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-      color: colors.blue,
-      allDay: true
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      end: new Date(),
-      title: 'A draggable and resizable event',
-      color: colors.yellow,
-      actions: this.actions,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    }
-  ];
+  events: CalendarEvent[] = [];
 
   activeDayIsOpen: boolean = true;
 
-  constructor(private modal: NgbModal) {}
+  constructor(private modal: NgbModal, private eventService: EventService, private mappingEventService: MappingEventService) {}
+
+  ngOnInit(): void {
+      this.eventService.getAllEvents().subscribe(events => {
+        this.events = events.map(function(event) {
+          console.log(this.event);
+          return {
+            id: this.event.id,
+            start: new Date(this.event.dateDebut),
+            end: new Date(this.event.dateFin),
+            title: this.event.titre,
+            color:  {
+              primary: this.event.couleurs.primary,
+              secondary:this.event.couleurs.secondary
+            },
+            actions: [
+              {
+                label: '<i class="fas fa-pencil-alt"></i>',
+                onClick: ({ event }: { event: CalendarEvent }): void => {
+                  this.handleEvent("Edited", event);
+                }
+              },
+              {
+                label: '<i class="fas fa-times"></i>',
+                onClick: ({ event }: { event: CalendarEvent }): void => {
+                  this.events = this.events.filter(iEvent => iEvent !== event);
+                  this.eventService.deleteEventById(Number(event.id)).subscribe((eventDeletedInDb) =>{
+                  });
+                  console.log(event.id);
+                  this.handleEvent("Deleted", event);
+                }
+              }
+            ],
+            resizable: {
+              beforeStart: true,
+              afterEnd: true
+            },
+            draggable: true,
+            allDay: event._journeeEntiere
+          };
+      });
+    });
+    this.refresh.next();
+    console.log(this.events);
+  }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -144,18 +139,18 @@ export class CalendarComponent {
   }: CalendarEventTimesChangedEvent): void {
     event.start = newStart;
     event.end = newEnd;
-    this.handleEvent('Dropped or resized', event);
+    this.handleEvent("Dropped or resized", event);
     this.refresh.next();
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
     this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
+    this.modal.open(this.modalContent, { size: "lg" });
   }
 
   addEvent(): void {
-    this.events.push({
-      title: 'New event',
+    const calendarEventToSave: CalendarEvent = {
+      title: "New event",
       start: startOfDay(new Date()),
       end: endOfDay(new Date()),
       color: colors.red,
@@ -164,8 +159,25 @@ export class CalendarComponent {
         beforeStart: true,
         afterEnd: true
       }
+    };
+    console.log(calendarEventToSave);
+    let eventToSave: Event = this.mappingEventService.convertCalendarEventToEvent(calendarEventToSave);
+    console.log(eventToSave);
+    this.eventService.createEvent(eventToSave).subscribe((event) => {
+      console.log(event);
+      eventToSave = event;
     });
+    calendarEventToSave.id = eventToSave._id;
+    console.log(eventToSave);
+    console.log(calendarEventToSave);
+    this.events.push(calendarEventToSave);
     this.refresh.next();
   }
-}
 
+  deleteById(index: number, eventId: number){
+    this.eventService.deleteEventById(Number(eventId)).subscribe((eventDeletedInDb) =>{
+      // Verifier status
+      this.events.splice(index, 1);
+    });
+  }
+}
