@@ -28,6 +28,7 @@ import {
   CalendarView
 } from "angular-calendar";
 import { Couleur } from "../models/couleur";
+import { log } from 'util';
 
 const colors: any = {
   red: {
@@ -77,30 +78,30 @@ export class CalendarComponent implements OnInit{
   ngOnInit(): void {
       this.eventService.getAllEvents().subscribe(events => {
         this.events = events.map(function(event) {
-          console.log(this.event);
           return {
-            id: this.event.id,
-            start: new Date(this.event.dateDebut),
-            end: new Date(this.event.dateFin),
-            title: this.event.titre,
+            id: event.id,
+            start: new Date(event.dateDebut),
+            end: new Date(event.dateFin),
+            title: event.titre,
             color:  {
-              primary: this.event.couleurs.primary,
-              secondary:this.event.couleurs.secondary
+              primary: event.couleurs.primary,
+              secondary: event.couleurs.secondary
             },
             actions: [
               {
                 label: '<i class="fas fa-pencil-alt"></i>',
                 onClick: ({ event }: { event: CalendarEvent }): void => {
+                  console.log(event);
                   this.handleEvent("Edited", event);
                 }
               },
               {
                 label: '<i class="fas fa-times"></i>',
                 onClick: ({ event }: { event: CalendarEvent }): void => {
-                  this.events = this.events.filter(iEvent => iEvent !== event);
+                  console.log(events);
+                  events = events.filter(iEvent => iEvent !== event);
                   this.eventService.deleteEventById(Number(event.id)).subscribe((eventDeletedInDb) =>{
                   });
-                  console.log(event.id);
                   this.handleEvent("Deleted", event);
                 }
               }
@@ -110,7 +111,7 @@ export class CalendarComponent implements OnInit{
               afterEnd: true
             },
             draggable: true,
-            allDay: event._journeeEntiere
+            allDay: event.journeeEntiere
           };
       });
     });
@@ -139,7 +140,11 @@ export class CalendarComponent implements OnInit{
   }: CalendarEventTimesChangedEvent): void {
     event.start = newStart;
     event.end = newEnd;
-    this.handleEvent("Dropped or resized", event);
+    const eventToUpdate: Event = this.mappingEventService.convertCalendarEventToEvent(event);
+    this.eventService.updateEvent(eventToUpdate).subscribe((eventUpdated) => {
+      event = this.mappingEventService.convertEventToCalendarEvent(eventUpdated);
+    })
+    this.handleEvent("Dropped or resized TTTT", event);
     this.refresh.next();
   }
 
@@ -160,16 +165,11 @@ export class CalendarComponent implements OnInit{
         afterEnd: true
       }
     };
-    console.log(calendarEventToSave);
     let eventToSave: Event = this.mappingEventService.convertCalendarEventToEvent(calendarEventToSave);
-    console.log(eventToSave);
     this.eventService.createEvent(eventToSave).subscribe((event) => {
-      console.log(event);
       eventToSave = event;
     });
-    calendarEventToSave.id = eventToSave._id;
-    console.log(eventToSave);
-    console.log(calendarEventToSave);
+    calendarEventToSave.id = eventToSave.id;
     this.events.push(calendarEventToSave);
     this.refresh.next();
   }

@@ -66,8 +66,11 @@ public class EventService {
 		if(!eventSaved.getDateFin().equals(event.getDateFin())) {
 			eventSaved.setDateFin(event.getDateFin());
 		}
-		if(!eventSaved.getCouleurs().equals(event.getCouleurs())) {
-			eventSaved.setCouleurs(event.getCouleurs());
+		if(!eventSaved.getCouleurs().getPrimary().equals(event.getCouleurs().getPrimary())) {
+			eventSaved.getCouleurs().setPrimary(event.getCouleurs().getPrimary());
+		}
+		if(!eventSaved.getCouleurs().getSecondary().equals(event.getCouleurs().getSecondary())) {
+			eventSaved.getCouleurs().setSecondary(event.getCouleurs().getSecondary());
 		}
 		Event updatedEvent = saveEvt(eventSaved);
 		return updatedEvent;

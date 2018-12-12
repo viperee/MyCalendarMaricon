@@ -15,7 +15,6 @@ export class EventService {
   constructor(private http: HttpClient) { }
 
   getAllEvents(): Observable<Event[]> {
-    console.log("call all events endpoint");
     return this.http.get<Event[]>(endpoint);
   }
 
@@ -28,7 +27,7 @@ export class EventService {
   }
 
   updateEvent(event: Event): Observable<Event> {
-    return this.http.post<Event>(endpoint + `/${event._id}`, event);
+    return this.http.post<Event>(endpoint + `/${event.id}`, event);
   }
 
   deleteEventById(eventId: number): Observable<Event> {
