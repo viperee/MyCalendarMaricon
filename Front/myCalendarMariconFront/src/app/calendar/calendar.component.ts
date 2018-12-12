@@ -107,7 +107,6 @@ export class CalendarComponent implements OnInit{
       });
     });
     this.refresh.next();
-    console.log(this.events);
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
