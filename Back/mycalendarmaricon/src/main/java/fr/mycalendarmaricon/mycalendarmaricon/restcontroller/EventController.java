@@ -19,7 +19,7 @@ import fr.mycalendarmaricon.mycalendarmaricon.model.Event;
 import fr.mycalendarmaricon.mycalendarmaricon.service.EventService;
 
 @RestController
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin("http://elasticbeanstalk-eu-west-3-002490453839.s3-website.eu-west-3.amazonaws.com")
 public class EventController {
 	@Autowired
 	private EventService eventService;
