@@ -7,6 +7,7 @@ import {
   TemplateRef,
   OnInit
 } from "@angular/core";
+import Swal from 'sweetalert2';
 import {
   startOfDay,
   endOfDay,
@@ -80,22 +81,6 @@ export class CalendarComponent implements OnInit{
               secondary: event.couleurs.secondary
             },
             actions: [
-              {
-                label: '<i class="fas fa-pencil-alt"></i>',
-                onClick: ({ event }: { event: CalendarEvent }): void => {
-                  alert("Edited");
-                }
-              },
-              {
-                label: '<i class="fas fa-times"></i>',
-                onClick: ({ event }: { event: CalendarEvent }): void => {
-                  //const eventToRemove: Event = this.mappingEventService.convertEventToCalendarEvent(event);
-                  //events = events.filter(iEvent => iEvent !== eventToRemove);
-                  //eventService.deleteEventById(Number(event.id)).subscribe((eventDeletedInDb) =>{
-                  //});
-                  alert("Deleted");
-                }
-              }
             ],
             resizable: {
               beforeStart: true,
@@ -134,13 +119,17 @@ export class CalendarComponent implements OnInit{
     this.eventService.updateEvent(eventToUpdate).subscribe((eventUpdated) => {
       event = this.mappingEventService.convertEventToCalendarEvent(eventUpdated);
     })
-    alert("Dropped or resized");
+    Swal(
+      'Déplacement !',
+      'L\'évènement a été déplacé avec succès !',
+      'success'
+    );
     this.refresh.next();
   }
 
   addEvent(): void {
     const calendarEventToSave: CalendarEvent = {
-      title: "New event",
+      title: "Nouvelle évènement",
       start: startOfDay(new Date()),
       end: endOfDay(new Date()),
       color: colors.red,
@@ -165,6 +154,11 @@ export class CalendarComponent implements OnInit{
     this.eventService.deleteEventById(Number(eventId)).subscribe((eventDeletedInDb) =>{
       // Verifier status
       this.events.splice(index, 1);
+      Swal(
+        'Suppression !',
+        'L\'évènement a été supprimé avec succès !',
+        'success'
+      );
     });
   }
 
@@ -172,7 +166,11 @@ export class CalendarComponent implements OnInit{
     const eventToUpdate: Event = this.mappingEventService.convertCalendarEventToEvent(event);
     this.eventService.updateEvent(eventToUpdate).subscribe((eventUpdated) => {
       event = this.mappingEventService.convertEventToCalendarEvent(eventUpdated);
-    })
-    alert("update");
+      Swal(
+        'Modification !',
+        'L\'évènement a été modifié avec succès !',
+        'success'
+      );
+    });
   }
 }
