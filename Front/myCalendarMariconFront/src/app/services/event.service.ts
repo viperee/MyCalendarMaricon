@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Event } from '../models/event';
 
-const endpoint = 'http://localhost:8080/events';
+const endpoint = 'http://maricon-env-1.pnam2iibwm.eu-west-3.elasticbeanstalk.com/events';
 
 @Injectable({
   providedIn: 'root'
