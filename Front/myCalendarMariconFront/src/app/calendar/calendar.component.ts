@@ -153,10 +153,12 @@ export class CalendarComponent implements OnInit{
     let eventToSave: Event = this.mappingEventService.convertCalendarEventToEvent(calendarEventToSave);
     this.eventService.createEvent(eventToSave).subscribe((event) => {
       eventToSave = event;
+      calendarEventToSave.id = eventToSave.id;
+      this.events.push(calendarEventToSave);
+      this.refresh.next();
     });
-    calendarEventToSave.id = eventToSave.id;
-    this.events.push(calendarEventToSave);
-    this.refresh.next();
+
+
   }
 
   deleteById(index: number, eventId: number){
@@ -167,7 +169,6 @@ export class CalendarComponent implements OnInit{
   }
 
   updateEvent(event: CalendarEvent){
-    console.log(event);
     const eventToUpdate: Event = this.mappingEventService.convertCalendarEventToEvent(event);
     this.eventService.updateEvent(eventToUpdate).subscribe((eventUpdated) => {
       event = this.mappingEventService.convertEventToCalendarEvent(eventUpdated);
