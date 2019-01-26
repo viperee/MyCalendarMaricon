@@ -34,11 +34,6 @@ Comme Google Calendar, il résulte d'un besoin d'avoir un calendrier electroniqu
 
 - Cliquez droit sur votre projet : **Run as -> Maven -> Update project** pour télécharger les libs.
 
-### Test de l'API Rest
-
-- Vous pouvez tester l'api sans deployer le client Angular via l'application [Postman](https://www.getpostman.com/)
-- Vous pouvez importer les requetes dans Postman via le bouton **Import** puis **Import from Link** :  https://www.getpostman.com/collections/bb595da6078e2c677d69
-
 ### Base de données
 
 - La base de données est une base en mémoire [H2](http://h2database.com/html/main.html), vous n'avez donc pas besoin de configurer de base de données.
